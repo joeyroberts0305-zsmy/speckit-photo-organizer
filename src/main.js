@@ -1,4 +1,4 @@
-import { insertPhoto, fetchAlbums, updateAlbumOrder, storeImageBlob, fetchAlbums as getAlbums, getImageBlobURL, createAlbumIfMissing } from './db.js';
+import { initDB, insertPhoto, fetchAlbums, updateAlbumOrder, storeImageBlob, fetchAlbums as getAlbums, getImageBlobURL, createAlbumIfMissing } from './db.js';
 
 const fileInput = document.getElementById('fileInput');
 const albumsContainer = document.getElementById('albumsContainer');
@@ -166,7 +166,8 @@ albumsContainer.addEventListener('drop', async (e)=>{
 
 // initialize db and bind UI
 (async function init(){
-  // the db module has already initialized when imported (it dynamically loads sql.js on its first call)
+  // initialize sql.js and the local SQLite DB
+  await initDB();
   fileInput.addEventListener('change', async (e)=>{ await addFiles(e.target.files); fileInput.value = ''; });
   clearBtn.addEventListener('click', clearAll);
   await renderAlbums();
