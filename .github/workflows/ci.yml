@@ -46,19 +46,35 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - name: Install dependencies
+      - name: Diagnostics: node & npm
         run: |
-          npm install
-          npx playwright install --with-deps
+          node --version || true
+          npm --version || true
+          env | sort
+      - name: Install dependencies (verbose)
+        run: |
+          npm config set loglevel verbose
+          npm install 2>&1 | tee npm-install.log
+          npx playwright --version || true
+          npx playwright install --with-deps 2>&1 | tee playwright-install.log
       - name: Build
-        run: npm run build
-      - name: Start preview server
+        run: npm run build 2>&1 | tee build.log
+      - name: Start preview server and wait
         run: |
-          npm run preview -- --port 5173 &
-          npx wait-on http://127.0.0.1:5173
-      - name: Run Playwright E2E
+          # start vite preview in background and capture logs
+          npm run preview -- --port 5173 > preview.log 2>&1 &
+          echo $! > preview.pid
+          # wait for server
+          npx wait-on -t 20000 http://127.0.0.1:5173
+          echo "Preview logs (tail):"
+          tail -n +1 preview.log || true
+      - name: Run Playwright E2E (verbose)
         env:
           CI: true
         run: |
-          npm run test:e2e
+          npx playwright test --reporter=list --timeout 30000 2>&1 | tee playwright-test.log || (echo "Playwright logs:" && tail -n 200 playwright-test.log && exit 1)
+      - name: Cleanup preview server
+        if: always()
+        run: |
+          if [ -f preview.pid ]; then kill "$(cat preview.pid)" || true; fi
 
