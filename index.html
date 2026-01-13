@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Speckit Photo Organizer</title>
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Speckit Photo Organizer</h1>
+    <div class="controls">
+      <label class="upload-btn">
+        Upload Photos
+        <input id="fileInput" type="file" accept="image/*" multiple />
+      </label>
+      <button id="clearBtn">Clear All (session)</button>
+    </div>
+  </header>
+
+  <main>
+    <p class="hint">Albums are grouped by photo date (YYYY-MM-DD). Drag albums to reorder.</p>
+    <section id="albumsContainer" class="albums" aria-label="Albums"></section>
+  </main>
+
+  <footer>
+    <small>Photos are stored in the browser; album metadata is stored in a local SQLite DB (sql.js).</small>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
