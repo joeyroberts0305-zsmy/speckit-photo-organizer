@@ -16,11 +16,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - name: Install dependencies
+      - name: Install dependencies (verbose)
+        shell: bash
         run: |
           node --version
+          node -p "process.versions"
           npm --version
-          npm install
+          npm config set loglevel verbose
+          set -o pipefail
+          npm install 2>&1 | tee npm-install.log
+          if [ ${PIPESTATUS[0]} -ne 0 ]; then
+            echo "--- npm install failed, dumping npm-install.log ---"
+            sed -n '1,400p' npm-install.log || true
+            echo "--- listing repository files ---"
+            ls -la || true
+            exit 1
+          fi
       - name: Build
         run: npm run build
       - name: Smoke test (sql.js)
