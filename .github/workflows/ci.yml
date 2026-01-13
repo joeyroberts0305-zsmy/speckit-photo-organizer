@@ -61,11 +61,12 @@ jobs:
         run: npm run build 2>&1 | tee build.log
       - name: Start preview server and wait
         run: |
-          # start vite preview in background and capture logs
-          npm run preview -- --port 5173 > preview.log 2>&1 &
+          # start vite preview in background and capture logs (bind to localhost explicitly)
+          npx vite preview --port 5173 --host 127.0.0.1 > preview.log 2>&1 &
           echo $! > preview.pid
-          # wait for server
-          npx wait-on -t 20000 http://127.0.0.1:5173
+          # give it a moment and wait for the server to be reachable
+          sleep 2
+          npx wait-on -t 30000 http://127.0.0.1:5173
           echo "Preview logs (tail):"
           tail -n +1 preview.log || true
       - name: Run Playwright E2E (verbose)
