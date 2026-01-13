@@ -1,0 +1,1 @@
+This folder contains tiny fixtures used by Playwright tests (1x1 PNGs). Files are generated at test time by the test helper.
