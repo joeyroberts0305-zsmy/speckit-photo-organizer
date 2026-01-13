@@ -1,5 +1,7 @@
 # Speckit Photo Organizer (Vite + sql.js)
 
+[![CI](https://github.com/joeyroberts0305-zsmy/speckit-photo-organizer/actions/workflows/ci.yml/badge.svg)](https://github.com/joeyroberts0305-zsmy/speckit-photo-organizer/actions/workflows/ci.yml)
+
 This variant stores album metadata in a local SQLite DB using `sql.js` (SQLite compiled to WASM). Image blobs are stored in IndexedDB.
 
 Quick start
