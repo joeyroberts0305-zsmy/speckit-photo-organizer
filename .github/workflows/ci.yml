@@ -73,7 +73,8 @@ jobs:
         env:
           CI: true
         run: |
-          npx playwright test --reporter=list --timeout 30000 2>&1 | tee playwright-test.log || (echo "Playwright logs:" && tail -n 200 playwright-test.log && exit 1)
+          set -o pipefail
+          npx playwright test --reporter=list --timeout 30000 2>&1 | tee playwright-test.log || { echo "Playwright logs:"; tail -n 200 playwright-test.log; exit 1; }
       - name: Cleanup preview server
         if: always()
         run: |
