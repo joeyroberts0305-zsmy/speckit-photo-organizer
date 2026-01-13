@@ -21,11 +21,8 @@ test('upload creates album and persists', async ({ page, context }) =>{
   const fixturePath = path.join(__dirname, 'fixtures', 'white.png');
   writeSamplePng(fixturePath);
 
-  const [fileChooser] = await Promise.all([
-    page.waitForEvent('filechooser'),
-    page.click('#fileInput')
-  ]);
-  await fileChooser.setFiles(fixturePath);
+  // directly set the file input (more reliable for headless CI, works when input is hidden)
+  await page.setInputFiles('#fileInput', fixturePath);
 
   // wait for album to appear
   await expect(page.locator('.album')).toHaveCount(1);
