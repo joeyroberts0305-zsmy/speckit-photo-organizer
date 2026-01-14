@@ -1,6 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const { test, expect } = require('@playwright/test');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { test, expect } from '@playwright/test';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function writeSamplePng(targetPath){
   // 1x1 white PNG
