@@ -1,29 +1,220 @@
-:root{
-  --bg:#0f1720;
-  --card:#0b1220;
-  --accent:#4f46e5;
-  --muted:#94a3b8;
-  --surface:#0b1220;
+:root {
+  --bg: #0a0e1a;
+  --card: #131824;
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --muted: #94a3b8;
+  --text: #f1f5f9;
+  --border: rgba(148, 163, 184, 0.1);
+  --shadow: rgba(0, 0, 0, 0.3);
 }
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial}
-body{background:linear-gradient(180deg,#071024 0%, #071426 100%);color:#e6eef8;padding:20px}
-header{display:flex;align-items:center;justify-content:space-between;gap:16px}
-header h1{margin:0;font-size:1.25rem}
-.controls{display:flex;gap:8px;align-items:center}
-.upload-btn{background:var(--accent);padding:8px 12px;border-radius:8px;color:white;cursor:pointer}
-.upload-btn input{display:none}
-button{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px 10px;border-radius:8px;cursor:pointer}
-.hint{color:var(--muted);margin-top:12px}
-.albums{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
-.album{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:10px;width:320px;min-height:120px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column}
-.album.dragging{opacity:0.5}
-.albumHeader{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.albumTitle{font-weight:600}
-.photoGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.photoTile{width:100%;aspect-ratio:1/1;overflow:hidden;border-radius:6px;position:relative;background:#071022}
-.photoTile img{width:100%;height:100%;object-fit:cover;display:block}
-.empty{color:var(--muted);font-size:0.9rem}
-.albumPlaceholder{border:2px dashed rgba(255,255,255,0.04);padding:24px;border-radius:10px;width:320px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
-.dropTarget{outline:2px dashed rgba(79,70,229,0.6)}
-footer{margin-top:18px;color:var(--muted)}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0a0e1a 0%, #1a1f35 100%);
+  color: var(--text);
+  padding: 32px 24px;
+  min-height: 100vh;
+}
+
+header {
+  max-width: 1400px;
+  margin: 0 auto 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  background: var(--card);
+  padding: 24px 32px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 16px var(--shadow);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.upload-btn {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+  padding: 12px 24px;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  border: none;
+}
+
+.upload-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+.upload-btn input { display: none; }
+
+button {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 10px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: rgba(148, 163, 184, 0.1);
+  color: var(--text);
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+main {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.hint {
+  color: var(--muted);
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+}
+
+.albums {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+.album {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px var(--shadow);
+  cursor: grab;
+}
+
+.album:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.album.dragging {
+  opacity: 0.4;
+  transform: scale(0.95);
+  cursor: grabbing;
+}
+
+.albumHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.albumTitle {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+.albumHeader button {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+.photoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.photoGrid.hidden { display: none; }
+
+.photoTile {
+  width: 100%;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  border-radius: 10px;
+  position: relative;
+  background: #0a0e1a;
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+}
+
+.photoTile:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+  border-color: var(--accent);
+}
+
+.photoTile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.empty {
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 24px;
+}
+
+.albumPlaceholder {
+  border: 2px dashed var(--border);
+  padding: 48px 32px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  text-align: center;
+  font-size: 1rem;
+}
+
+.dropTarget {
+  outline: 3px dashed var(--accent);
+  outline-offset: -3px;
+  background: rgba(99, 102, 241, 0.05);
+}
+
+footer {
+  margin-top: 48px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
