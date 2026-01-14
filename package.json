@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "ci:smoke": "node scripts/smoke.js",
+    "ci:smoke": "node scripts/smoke.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ci": "npx playwright install --with-deps && playwright test"
   },
