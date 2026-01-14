@@ -13,6 +13,7 @@ const CATEGORY_MAP = {
   girl: 'people',
   face: 'people',
   human: 'people',
+  portrait: 'people',
   
   // Animals
   dog: 'animals',
@@ -25,6 +26,10 @@ const CATEGORY_MAP = {
   bear: 'animals',
   zebra: 'animals',
   giraffe: 'animals',
+  lion: 'animals',
+  tiger: 'animals',
+  leopard: 'animals',
+  cheetah: 'animals',
   pet: 'animals',
   animal: 'animals',
   wildlife: 'animals',
@@ -32,6 +37,10 @@ const CATEGORY_MAP = {
   fish: 'animals',
   insect: 'animals',
   butterfly: 'animals',
+  feline: 'animals',
+  canine: 'animals',
+  wild: 'animals',
+  prey: 'animals',
   
   // Plants
   plant: 'plants',
@@ -142,7 +151,7 @@ export async function classifyImage(imageFile) {
     let bestScore = categoryScores.other;
     
     for (const [category, score] of Object.entries(categoryScores)) {
-      if (score > bestScore && score > 0.15) { // minimum confidence threshold
+      if (score > bestScore && score > 0.08) { // lowered threshold from 0.15 to 0.08
         bestScore = score;
         bestCategory = category;
       }
