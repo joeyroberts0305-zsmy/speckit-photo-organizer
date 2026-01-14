@@ -45,11 +45,11 @@ async function idbPut(store, key, value){
 }
 
 export async function initDB(){
-  // load sql.js dynamically
-  const mod = await import('sql.js');
-  const initSqlJs = mod.default || mod;
-  const baseUrl = import.meta.env.BASE_URL || '/speckit-photo-organizer/';
-  SQL = await initSqlJs({ locateFile: file => `${baseUrl}node_modules/sql.js/dist/${file}` });
+  // load sql.js from CDN
+  const initSqlJs = await import('https://cdn.jsdelivr.net/npm/sql.js@1.8.0/dist/sql-wasm.js').then(m => m.default);
+  SQL = await initSqlJs({
+    locateFile: file => `https://cdn.jsdelivr.net/npm/sql.js@1.8.0/dist/${file}`
+  });
 
   // check for serialized DB in IndexedDB
   const serialized = await idbGet(STORE_DB, 'sqlite');
