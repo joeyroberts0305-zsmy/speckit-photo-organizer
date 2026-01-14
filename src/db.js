@@ -48,7 +48,8 @@ export async function initDB(){
   // load sql.js dynamically
   const mod = await import('sql.js');
   const initSqlJs = mod.default || mod;
-  SQL = await initSqlJs({ locateFile: file => `/node_modules/sql.js/dist/${file}` });
+  const basePath = import.meta.url.split('/').slice(0, -2).join('/');
+  SQL = await initSqlJs({ locateFile: file => `${basePath}/node_modules/sql.js/dist/${file}` });
 
   // check for serialized DB in IndexedDB
   const serialized = await idbGet(STORE_DB, 'sqlite');
