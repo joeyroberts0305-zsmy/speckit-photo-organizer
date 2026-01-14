@@ -4,7 +4,7 @@
 let model = null;
 
 const CATEGORY_MAP = {
-  // People
+  // People (including body parts and clothing)
   person: 'people',
   people: 'people',
   man: 'people',
@@ -14,6 +14,24 @@ const CATEGORY_MAP = {
   face: 'people',
   human: 'people',
   portrait: 'people',
+  head: 'people',
+  neck: 'people',
+  body: 'people',
+  suit: 'people',
+  shirt: 'people',
+  dress: 'people',
+  tie: 'people',
+  clothing: 'people',
+  apparel: 'people',
+  hat: 'people',
+  glasses: 'people',
+  eye: 'people',
+  nose: 'people',
+  mouth: 'people',
+  smile: 'people',
+  hair: 'people',
+  beard: 'people',
+  mustache: 'people',
   
   // Animals
   dog: 'animals',
@@ -134,9 +152,11 @@ export async function classifyImage(imageFile) {
       let matched = false;
       for (const [key, category] of Object.entries(CATEGORY_MAP)) {
         if (className.includes(key)) {
-          categoryScores[category] += prob;
+          // Boost people category since it's harder to detect
+          const boost = category === 'people' ? 1.5 : 1.0;
+          categoryScores[category] += prob * boost;
           matched = true;
-          console.log(`  → ${pred.className}: ${Math.round(prob * 100)}% => ${category}`);
+          console.log(`  → ${pred.className}: ${Math.round(prob * 100)}% => ${category} (${boost}x)`);
           break;
         }
       }
@@ -151,7 +171,7 @@ export async function classifyImage(imageFile) {
     let bestScore = categoryScores.other;
     
     for (const [category, score] of Object.entries(categoryScores)) {
-      if (score > bestScore && score > 0.08) { // lowered threshold from 0.15 to 0.08
+      if (score > bestScore && score > 0.05) { // lowered further from 0.08 to 0.05
         bestScore = score;
         bestCategory = category;
       }
