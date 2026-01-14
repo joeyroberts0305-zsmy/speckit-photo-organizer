@@ -54,11 +54,22 @@ export async function initDB(){
   const serialized = await idbGet(STORE_DB, 'sqlite');
   if(serialized){
     db = new SQL.Database(new Uint8Array(serialized));
+    // Run migration to add category column if it doesn't exist
+    try {
+      db.run(`ALTER TABLE photos ADD COLUMN category TEXT DEFAULT 'other'`);
+      await persistDB();
+      console.log('✓ Migrated database schema');
+    } catch (err) {
+      // Column already exists or other error, ignore
+      if (!err.message.includes('duplicate column name')) {
+        console.warn('Migration warning:', err.message);
+      }
+    }
   } else {
     db = new SQL.Database();
     // create basic schema
     db.run(`CREATE TABLE IF NOT EXISTS albums (id TEXT PRIMARY KEY, title TEXT, position INTEGER);
-            CREATE TABLE IF NOT EXISTS photos (id TEXT PRIMARY KEY, name TEXT, album TEXT, category TEXT, created_at INTEGER);
+            CREATE TABLE IF NOT EXISTS photos (id TEXT PRIMARY KEY, name TEXT, album TEXT, category TEXT DEFAULT 'other', created_at INTEGER);
     `);
     await persistDB();
   }

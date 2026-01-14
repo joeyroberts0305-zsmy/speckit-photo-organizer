@@ -27,11 +27,29 @@ export async function initClassifier() {
   if (model) return model;
   
   try {
-    // Load MobileNet from CDN
-    const mobilenet = await import('https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0');
-    const tf = await import('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0');
+    // Load TensorFlow.js and MobileNet
+    const script1 = document.createElement('script');
+    script1.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0/dist/tf.min.js';
+    document.head.appendChild(script1);
     
-    model = await mobilenet.load();
+    await new Promise((resolve, reject) => {
+      script1.onload = resolve;
+      script1.onerror = reject;
+    });
+    
+    const script2 = document.createElement('script');
+    script2.src = 'https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js';
+    document.head.appendChild(script2);
+    
+    await new Promise((resolve, reject) => {
+      script2.onload = resolve;
+      script2.onerror = reject;
+    });
+    
+    // Wait a moment for globals to be available
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    model = await window.mobilenet.load();
     console.log('✓ Image classifier loaded');
     return model;
   } catch (err) {
