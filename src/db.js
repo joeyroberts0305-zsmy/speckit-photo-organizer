@@ -45,9 +45,8 @@ async function idbPut(store, key, value){
 }
 
 export async function initDB(){
-  // load sql.js from CDN
-  const initSqlJs = await import('https://cdn.jsdelivr.net/npm/sql.js@1.8.0/dist/sql-wasm.js').then(m => m.default);
-  SQL = await initSqlJs({
+  // sql.js loaded globally via script tag in index.html
+  SQL = await window.initSqlJs({
     locateFile: file => `https://cdn.jsdelivr.net/npm/sql.js@1.8.0/dist/${file}`
   });
 
