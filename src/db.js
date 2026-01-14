@@ -58,7 +58,7 @@ export async function initDB(){
     db = new SQL.Database();
     // create basic schema
     db.run(`CREATE TABLE IF NOT EXISTS albums (id TEXT PRIMARY KEY, title TEXT, position INTEGER);
-            CREATE TABLE IF NOT EXISTS photos (id TEXT PRIMARY KEY, name TEXT, album TEXT, created_at INTEGER);
+            CREATE TABLE IF NOT EXISTS photos (id TEXT PRIMARY KEY, name TEXT, album TEXT, category TEXT, created_at INTEGER);
     `);
     await persistDB();
   }
@@ -98,10 +98,10 @@ async function ensureAlbumExists(id){
   }
 }
 
-async function addPhoto({id, name, album, created_at}){
+async function addPhoto({id, name, album, category, created_at}){
   await ensureAlbumExists(album);
-  const stmt = db.prepare('INSERT INTO photos (id,name,album,created_at) VALUES (?,?,?,?)');
-  stmt.run([id, name, album, created_at]);
+  const stmt = db.prepare('INSERT INTO photos (id,name,album,category,created_at) VALUES (?,?,?,?,?)');
+  stmt.run([id, name, album, category, created_at]);
   stmt.free();
   await persistDB();
 }
@@ -120,7 +120,7 @@ function getAlbums(){
   // returns albums ordered by position with photo metadata (without image data)
   const albums = runQuery('SELECT id,title,position FROM albums ORDER BY position');
   for(const a of albums){
-    const photos = runQuery('SELECT id,name,created_at FROM photos WHERE album = ? ORDER BY created_at',[a.id]);
+    const photos = runQuery('SELECT id,name,category,created_at FROM photos WHERE album = ? ORDER BY created_at',[a.id]);
     a.photos = photos;
   }
   return albums;
