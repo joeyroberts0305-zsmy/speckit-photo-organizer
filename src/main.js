@@ -32,16 +32,7 @@ function cryptoRandomId(){
   return Math.random().toString(36).slice(2,9);
 }
 
-async function addFiles(fileList){
-  const files = Array.from(fileList).filter(f=>f.type.startsWith('image/'));
-  for(const f of files){
-    const id = cryptoRandomId();
-    const album = formatDateKey(new Date(f.lastModified));
-    const category = await classifyImage(f);
-    const created = Date.now();
-    await storeImageBlob(id, f);
-    await insertPhoto({id, name: f.name, album, category, created_at: created});
-  }
+async function addFiles(fileList){const files=Array.from(fileList).filter(f=>f.type.startsWith("image/"));console.log(`?? Uploading ${files.length} images...`);for(const f of files){const id=cryptoRandomId();const album=formatDateKey(new Date(f.lastModified));console.log(`\n??? Processing: ${f.name}`);const category=await classifyImage(f);console.log(`   Category: ${category}`);const created=Date.now();await storeImageBlob(id,f);await insertPhoto({id,name:f.name,album,category,created_at:created});}console.log("? Upload complete!");await renderAlbums();}
   await renderAlbums();
 }
 
@@ -151,5 +142,7 @@ albumsContainer.addEventListener('dragover', (e)=>{
   clearBtn.addEventListener('click', clearAll);
   await renderAlbums();
 })();
+
+
 
 
