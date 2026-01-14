@@ -32,7 +32,22 @@ function cryptoRandomId(){
   return Math.random().toString(36).slice(2,9);
 }
 
-async function addFiles(fileList){const files=Array.from(fileList).filter(f=>f.type.startsWith("image/"));console.log(`?? Uploading ${files.length} images...`);for(const f of files){const id=cryptoRandomId();const album=formatDateKey(new Date(f.lastModified));console.log(`\n??? Processing: ${f.name}`);const category=await classifyImage(f);console.log(`   Category: ${category}`);const created=Date.now();await storeImageBlob(id,f);await insertPhoto({id,name:f.name,album,category,created_at:created});}console.log("? Upload complete!");await renderAlbums();}
+async function addFiles(fileList){
+  const files = Array.from(fileList).filter(f=>f.type.startsWith('image/'));
+  console.log(`📤 Uploading ${files.length} images...`);
+  
+  for(const f of files){
+    const id = cryptoRandomId();
+    const album = formatDateKey(new Date(f.lastModified));
+    console.log(`\n🖼️ Processing: ${f.name}`);
+    const category = await classifyImage(f);
+    console.log(`   Category: ${category}`);
+    const created = Date.now();
+    await storeImageBlob(id, f);
+    await insertPhoto({id, name: f.name, album, category, created_at: created});
+  }
+  
+  console.log('✅ Upload complete!');
   await renderAlbums();
 }
 
@@ -112,12 +127,19 @@ async function createCategorySection(category, photos){
   for(const p of photos){
     const tile = document.createElement('div');
     tile.className = 'photoTile';
-    tile.title = `${p.name} (${p.albumDate})`;
+    
+    const dateLabel = document.createElement('div');
+    dateLabel.className = 'photoDate';
+    dateLabel.textContent = p.albumDate;
+    
     const img = document.createElement('img');
     const url = await getImageBlobURL(p.id);
     img.src = url || '';
     img.alt = p.name;
+    img.title = `${p.name} - ${p.albumDate}`;
+    
     tile.appendChild(img);
+    tile.appendChild(dateLabel);
     grid.appendChild(tile);
   }
 

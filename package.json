@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "ci:smoke": "node scripts/smoke.js"
+    "ci:smoke": "node scripts/smoke.js",
+    "test:e2e": "playwright test",
+    "test:e2e:ci": "npx playwright install --with-deps && playwright test"
   },
   "dependencies": {
     "sql.js": "^1.8.0"
@@ -16,13 +18,5 @@
     "vite": "^5.0.0",
     "playwright": "^1.38.0",
     "wait-on": "^7.0.1"
-  },
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "ci:smoke": "node scripts/smoke.js",
-    "test:e2e": "playwright test",
-    "test:e2e:ci": "npx playwright install --with-deps && playwright test"
   }
 }
